@@ -410,3 +410,12 @@ svg {
     padding: 0 18px;
   }
 }
+
+.logo-mark {
+  flex: none;
+  display: block;
+}
+
+.logo-tile {
+  border-radius: 8px;
+}
