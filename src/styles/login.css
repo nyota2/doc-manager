@@ -326,6 +326,17 @@
   box-shadow: 0 0 0 4px rgba(10, 143, 49, 0.12);
 }
 
+.field-error {
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  color: #c0392b;
+}
+
+.field input[aria-invalid="true"] {
+  border-color: #e04f5f;
+}
+
 .input-wrap {
   position: relative;
   display: block;

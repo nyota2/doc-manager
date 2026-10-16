@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import type { ClipboardEvent, FormEvent, KeyboardEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { findUser, signIn, useAppState } from "../app/data/store";
 import { ArrowLeft, ArrowRight, Building2, Eye, EyeOff, Fingerprint, Lock, ShieldCheck } from "lucide-react";
 import { Logo } from "../components/Logo";
 import { brand } from "../config/brand";
@@ -15,23 +16,41 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [code, setCode] = useState<string[]>(Array(CODE_LENGTH).fill(""));
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
   const codeRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const location = useLocation();
+  const from = (location.state as { from?: string } | null)?.from ?? "/app";
 
-  // Front-end only for now: real AD / SSO and MFA verification arrive with the backend.
+  if (useAppState().sessionUserId) return <Navigate to={from} replace />;
+
+  const toMfa = () => {
+    setStep("mfa");
+    window.setTimeout(() => codeRefs.current[0]?.focus(), 50);
+  };
+
+  // Identity is checked against the Group directory. Password and one-time-code
+  // verification move to Active Directory and the MFA service with the backend.
   const submitCredentials = (e: FormEvent) => {
     e.preventDefault();
+    if (!findUser(username) || !username.trim()) {
+      setError("Enter your email address or ZBFH network username.");
+      return;
+    }
+    setError("");
     setBusy(true);
     window.setTimeout(() => {
       setBusy(false);
-      setStep("mfa");
-      window.setTimeout(() => codeRefs.current[0]?.focus(), 50);
-    }, 700);
+      toMfa();
+    }, 500);
   };
 
   const submitCode = (e: FormEvent) => {
     e.preventDefault();
     setBusy(true);
-    window.setTimeout(() => navigate("/dashboard"), 700);
+    window.setTimeout(() => {
+      if (signIn(username)) navigate(from, { replace: true });
+      else setBusy(false);
+    }, 500);
   };
 
   const setDigit = (i: number, value: string) => {
@@ -118,7 +137,14 @@ export default function Login() {
               <h1>Welcome back</h1>
               <p className="login-sub">Sign in with your {brand.short} network account.</p>
 
-              <button type="button" className="sso-btn" onClick={() => setStep("mfa")}>
+              <button
+                type="button"
+                className="sso-btn"
+                onClick={() => {
+                  setUsername("");
+                  toMfa();
+                }}
+              >
                 <span className="sso-icon">
                   <Building2 size={18} />
                 </span>
@@ -136,11 +162,16 @@ export default function Login() {
                   <input
                     type="text"
                     autoComplete="username"
-                    placeholder="j.doe@zb.co.zw"
+                    placeholder="kmarufu or kmarufu@zb.co.zw"
                     value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={(e) => {
+                      setUsername(e.target.value);
+                      setError("");
+                    }}
+                    aria-invalid={!!error}
                     required
                   />
+                  {error && <em className="field-error">{error}</em>}
                 </label>
 
                 <label className="field">
