@@ -59,7 +59,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
         })),
       ...(canGovern(user)
         ? [
-            { id: "rec", section: "Go to", icon: <Archive size={16} />, title: "Records & retention", meta: "", run: go("/app/records") },
+            { id: "rec", section: "Go to", icon: <Archive size={16} />, title: "Records & retention", meta: "", run: go("/app") },
             { id: "aud", section: "Go to", icon: <ShieldCheck size={16} />, title: "Audit trail", meta: "", run: go("/app/audit") },
           ]
         : []),

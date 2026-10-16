@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
-  Archive,
   Bell,
   ChevronLeft,
   ExternalLink,
@@ -224,9 +223,6 @@ export default function AppShell() {
             <>
               <p className="side-label">Governance</p>
               <nav className="side-nav">
-                <NavLink to="/app/records">
-                  <Archive size={18} /> <span className="lbl">Records &amp; retention</span>
-                </NavLink>
                 <NavLink to="/app/audit">
                   <ShieldCheck size={18} /> <span className="lbl">Audit trail</span>
                 </NavLink>

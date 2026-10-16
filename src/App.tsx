@@ -3,7 +3,6 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import AppShell from "./app/AppShell";
-import Home from "./app/pages/Home";
 import Board from "./app/pages/Board";
 import MyDocuments from "./app/pages/MyDocuments";
 import Records from "./app/pages/Records";
@@ -25,11 +24,11 @@ export default function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/app" element={<AppShell />}>
-          <Route index element={<Home />} />
+          <Route index element={<Records />} />
           <Route path="w/:workspace" element={<Board />} />
           <Route path="documents" element={<MyDocuments />} />
           <Route path="approvals" element={<Navigate to="/app/documents?tab=mine" replace />} />
-          <Route path="records" element={<Records />} />
+          <Route path="records" element={<Navigate to="/app" replace />} />
           <Route path="audit" element={<Audit />} />
           <Route path="*" element={<Navigate to="/app" replace />} />
         </Route>
