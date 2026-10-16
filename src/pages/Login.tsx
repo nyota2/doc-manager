@@ -9,12 +9,17 @@ import "../styles/login.css";
 
 const CODE_LENGTH = 6;
 
+// Demo account: the form opens prefilled so anyone can sign in straight away.
+// The password and code are not checked until sign-in moves to the backend.
+const DEMO = { username: "kmarufu", password: "demo1234", code: "123456" };
+
 export default function Login() {
   const navigate = useNavigate();
   const [step, setStep] = useState<"credentials" | "mfa">("credentials");
   const [showPassword, setShowPassword] = useState(false);
-  const [username, setUsername] = useState("");
-  const [code, setCode] = useState<string[]>(Array(CODE_LENGTH).fill(""));
+  const [username, setUsername] = useState(DEMO.username);
+  const [password, setPassword] = useState(DEMO.password);
+  const [code, setCode] = useState<string[]>(DEMO.code.split(""));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const codeRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -136,6 +141,9 @@ export default function Login() {
             <>
               <h1>Welcome back</h1>
               <p className="login-sub">Sign in with your {brand.short} network account.</p>
+              <p className="demo-note">
+                Demo account filled in for you. Signs in as <b>{findUser(DEMO.username)?.name}</b>.
+              </p>
 
               <button
                 type="button"
@@ -186,6 +194,8 @@ export default function Login() {
                       type={showPassword ? "text" : "password"}
                       autoComplete="current-password"
                       placeholder="••••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       required
                     />
                     <button
@@ -244,7 +254,14 @@ export default function Login() {
                 </button>
               </form>
 
-              <button type="button" className="link-btn" onClick={() => setStep("credentials")}>
+              <button
+                type="button"
+                className="link-btn"
+                onClick={() => {
+                  if (!username) setUsername(DEMO.username);
+                  setStep("credentials");
+                }}
+              >
                 <ArrowLeft size={14} /> Use a different account
               </button>
             </>

@@ -77,7 +77,7 @@ export default function Home() {
             {waiting.length > 0 && (
               <>
                 {" · "}
-                <Link to="/app/approvals">
+                <Link to="/app/documents?tab=mine">
                   {waiting.length} document{waiting.length > 1 ? "s" : ""} waiting for your approval
                 </Link>
               </>
@@ -87,7 +87,7 @@ export default function Home() {
       </header>
 
       <div className="tiles">
-        <Link to="/app/approvals" className="tile">
+        <Link to="/app/documents?tab=mine" className="tile">
           <span>Waiting for you</span>
           <b>{waiting.length}</b>
           <small>approval{waiting.length === 1 ? "" : "s"} assigned to you</small>
@@ -123,7 +123,7 @@ export default function Home() {
             <div className="card-head">
               <h2>Waiting for you</h2>
               {waiting.length > 0 && (
-                <Link to="/app/approvals" className="card-link">
+                <Link to="/app/documents?tab=mine" className="card-link">
                   All approvals <ArrowRight size={14} />
                 </Link>
               )}

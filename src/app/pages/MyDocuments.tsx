@@ -1,13 +1,14 @@
-import { useState } from "react";
 import type { CSSProperties } from "react";
-import { CircleCheck, Inbox } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
+import { CircleCheck, FileText, Inbox } from "lucide-react";
 import { currentUser, pendingStep, useAppState, userById, visibleDocs, waitingOn, workspaceByKey } from "../data/store";
 import type { Doc } from "../data/types";
 import { timeAgo } from "../lib/format";
 import { useShell } from "../shellContext";
 import { ApprovalBar, Avatar, Empty, FileIcon, StatusPill } from "../components/ui";
 
-type Tab = "mine" | "done" | "all";
+type Tab = "uploads" | "mine" | "done" | "all";
+const tabs: Tab[] = ["uploads", "mine", "done", "all"];
 
 /** When the current step started waiting: the previous step's decision, or upload time. */
 const waitingSince = (d: Doc) => {
@@ -16,11 +17,23 @@ const waitingSince = (d: Doc) => {
   return (idx > 0 ? d.approval[idx - 1].at : undefined) ?? d.createdAt;
 };
 
-export default function Approvals() {
+export default function MyDocuments() {
   const state = useAppState();
   const user = currentUser()!;
-  const { openDoc } = useShell();
-  const [tab, setTab] = useState<Tab>("mine");
+  const { openDoc, openUpload } = useShell();
+  const [params, setParams] = useSearchParams();
+  const param = params.get("tab") as Tab | null;
+  const tab: Tab = param && tabs.includes(param) ? param : "uploads";
+  const setTab = (t: Tab) =>
+    setParams((p) => {
+      if (t === "uploads") p.delete("tab");
+      else p.set("tab", t);
+      return p;
+    });
+
+  const uploads = visibleDocs(state, user)
+    .filter((d) => d.ownerId === user.id)
+    .sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1));
 
   const mine = waitingOn(state, user.id).sort((a, b) => (waitingSince(a) < waitingSince(b) ? -1 : 1));
   const done = visibleDocs(state, user)
@@ -36,12 +49,15 @@ export default function Approvals() {
     <div className="page">
       <header className="page-head">
         <div>
-          <h1>My approvals</h1>
-          <p>Documents that need a decision from you, oldest first.</p>
+          <h1>My documents</h1>
+          <p>Documents you've uploaded, and the ones that need a decision from you.</p>
         </div>
       </header>
 
       <nav className="view-tabs">
+        <button className={tab === "uploads" ? "on" : ""} onClick={() => setTab("uploads")}>
+          Uploaded by me <em className="soft">{uploads.length}</em>
+        </button>
         <button className={tab === "mine" ? "on" : ""} onClick={() => setTab("mine")}>
           Waiting for me <em>{mine.length}</em>
         </button>
@@ -54,6 +70,38 @@ export default function Approvals() {
       </nav>
 
       <div className="card flush">
+        {tab === "uploads" &&
+          (uploads.length === 0 ? (
+            <Empty icon={<FileText size={22} />} title="You haven't uploaded anything yet">
+              <button className="link" onClick={() => openUpload()}>
+                Upload your first document
+              </button>
+            </Empty>
+          ) : (
+            <div className="list-table lt-uploads">
+              <div className="lt-row lt-head">
+                <span>Document</span>
+                <span>Status</span>
+                <span>Approvals</span>
+                <span>Uploaded</span>
+                <span>Updated</span>
+              </div>
+              {uploads.map((d) => (
+                <div className="lt-row" key={d.id} onClick={() => openDoc(d.id)} role="button" tabIndex={0}>
+                  <DocCell d={d} />
+                  <span>
+                    <StatusPill status={d.status} />
+                  </span>
+                  <span>
+                    <ApprovalBar doc={d} />
+                  </span>
+                  <span className="muted">{timeAgo(d.createdAt)}</span>
+                  <span className="muted">{timeAgo(d.updatedAt)}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+
         {tab === "mine" &&
           (mine.length === 0 ? (
             <Empty icon={<CircleCheck size={22} />} title="Nothing is waiting for you">

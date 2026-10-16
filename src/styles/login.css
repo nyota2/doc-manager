@@ -253,6 +253,16 @@
   background: linear-gradient(180deg, var(--green-600), var(--green-800));
 }
 
+.demo-note {
+  margin-top: 16px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--mint-50);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--green-800);
+}
+
 .divider {
   position: relative;
   margin: 28px 0;

@@ -84,9 +84,6 @@ export default function Board() {
       </nav>
 
       <div className="toolbar">
-        <button className="btn btn-primary btn-sm" onClick={() => openUpload({ workspace: ws.key })}>
-          <Plus size={16} /> New document
-        </button>
         <label className="tb-search">
           <Search size={15} />
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search this workspace" />

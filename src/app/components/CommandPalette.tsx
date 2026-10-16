@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, KeyboardEvent, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
-import { Archive, CornerDownLeft, House, Inbox, Plus, Search, ShieldCheck } from "lucide-react";
+import { Archive, CornerDownLeft, FileText, House, Inbox, Plus, Search, ShieldCheck } from "lucide-react";
 import { users, workspaces } from "../data/seed";
 import { canGovern, currentUser, statusLabel, useAppState, userById, visibleDocs, workspaceByKey } from "../data/store";
 import { matches, timeAgo } from "../lib/format";
@@ -45,7 +45,8 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
 
     const pages: Item[] = [
       { id: "home", section: "Go to", icon: <House size={16} />, title: "Home", meta: "", run: go("/app") },
-      { id: "appr", section: "Go to", icon: <Inbox size={16} />, title: "My approvals", meta: "", run: go("/app/approvals") },
+      { id: "mydocs", section: "Go to", icon: <FileText size={16} />, title: "My documents", meta: "", run: go("/app/documents") },
+      { id: "appr", section: "Go to", icon: <Inbox size={16} />, title: "My approvals", meta: "", run: go("/app/documents?tab=mine") },
       ...workspaces
         .filter((w) => user.workspaces.includes(w.key))
         .map<Item>((w) => ({

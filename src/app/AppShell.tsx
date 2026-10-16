@@ -4,9 +4,10 @@ import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate, useSearchPar
 import {
   Archive,
   Bell,
+  ChevronLeft,
   ExternalLink,
+  FileText,
   House,
-  Inbox,
   Lock,
   LogOut,
   Menu,
@@ -35,6 +36,22 @@ export default function AppShell() {
   const [upload, setUpload] = useState<UploadPreset | null>(null);
   const [searching, setSearching] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem("zbv-side-collapsed") === "1";
+    } catch {
+      return false;
+    }
+  });
+  const toggleCollapsed = () =>
+    setCollapsed((c) => {
+      try {
+        localStorage.setItem("zbv-side-collapsed", c ? "0" : "1");
+      } catch {
+        /* ignore */
+      }
+      return !c;
+    });
   const user = state.sessionUserId ? userById(state.sessionUserId) : null;
   const docId = params.get("doc");
 
@@ -80,7 +97,7 @@ export default function AppShell() {
 
   return (
     <ShellContext.Provider value={shell}>
-      <div className={`app${navOpen ? " nav-open" : ""}`}>
+      <div className={`app${navOpen ? " nav-open" : ""}${collapsed ? " side-collapsed" : ""}`}>
         <header className="top">
           <button className="icon-btn top-menu" onClick={() => setNavOpen((o) => !o)} aria-label="Menu">
             {navOpen ? <X size={20} /> : <Menu size={20} />}
@@ -96,8 +113,8 @@ export default function AppShell() {
           </button>
 
           <div className="top-right">
-            <button className="btn btn-primary btn-sm top-new" onClick={() => setUpload({})}>
-              <Plus size={17} /> <span>New document</span>
+            <button className="btn btn-primary btn-xs top-new" onClick={() => setUpload({})}>
+              <Plus size={14} /> <span>New document</span>
             </button>
 
             <Popover
@@ -131,7 +148,7 @@ export default function AppShell() {
                       </span>
                     </button>
                   ))}
-                  <Link className="menu-link" to="/app/approvals" onClick={close}>
+                  <Link className="menu-link" to="/app/documents?tab=mine" onClick={close}>
                     Open my approvals
                   </Link>
                 </div>
@@ -177,14 +194,14 @@ export default function AppShell() {
         <aside className="side">
           <nav className="side-nav">
             <NavLink to="/app" end>
-              <House size={18} /> Home
+              <House size={18} /> <span className="lbl">Home</span>
             </NavLink>
-            <NavLink to="/app/approvals">
-              <Inbox size={18} /> My approvals
+            <NavLink to="/app/documents">
+              <FileText size={18} /> <span className="lbl">My documents</span>
               {waiting.length > 0 && <em>{waiting.length}</em>}
             </NavLink>
             <button onClick={() => setSearching(true)}>
-              <Search size={18} /> Search
+              <Search size={18} /> <span className="lbl">Search</span>
             </button>
           </nav>
 
@@ -193,9 +210,9 @@ export default function AppShell() {
             {workspaces
               .filter((w) => user.workspaces.includes(w.key))
               .map((w) => (
-                <NavLink key={w.key} to={`/app/w/${w.key}`}>
+                <NavLink key={w.key} to={`/app/w/${w.key}`} title={w.name}>
                   <i className="ws-dot" style={{ "--c": w.color } as CSSProperties} />
-                  {w.name}
+                  <span className="lbl">{w.name}</span>
                   <span className="side-count">
                     {docs.filter((d) => d.workspace === w.key && d.status !== "disposed").length}
                   </span>
@@ -208,10 +225,10 @@ export default function AppShell() {
               <p className="side-label">Governance</p>
               <nav className="side-nav">
                 <NavLink to="/app/records">
-                  <Archive size={18} /> Records &amp; retention
+                  <Archive size={18} /> <span className="lbl">Records &amp; retention</span>
                 </NavLink>
                 <NavLink to="/app/audit">
-                  <ShieldCheck size={18} /> Audit trail
+                  <ShieldCheck size={18} /> <span className="lbl">Audit trail</span>
                 </NavLink>
               </nav>
             </>
@@ -219,9 +236,17 @@ export default function AppShell() {
 
           <div className="side-foot">
             <Lock size={14} />
-            <span>Encrypted and held in ZBFH data centres</span>
+            <span>Encrypted, held in ZBFH</span>
           </div>
         </aside>
+        <button
+          className="side-toggle"
+          onClick={toggleCollapsed}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          <ChevronLeft size={14} />
+        </button>
         <div className="side-scrim" onClick={() => setNavOpen(false)} />
 
         <main className="main">

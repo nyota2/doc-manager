@@ -28,6 +28,80 @@
   grid-template-columns: 248px minmax(0, 1fr);
   grid-template-rows: 60px minmax(0, 1fr);
   background: var(--app-bg);
+  position: relative;
+  transition: grid-template-columns 0.2s var(--ease);
+}
+
+.app.side-collapsed {
+  grid-template-columns: 64px minmax(0, 1fr);
+}
+
+.side-toggle {
+  position: absolute;
+  top: 74px;
+  left: 241px;
+  z-index: 20;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--line-strong);
+  color: var(--ink-600);
+  transition: left 0.2s var(--ease), color 0.15s;
+}
+
+.side-toggle:hover {
+  color: var(--ink-900);
+}
+
+.side-toggle svg {
+  transition: transform 0.2s var(--ease);
+}
+
+.side-collapsed .side-toggle {
+  left: 57px;
+}
+
+.side-collapsed .side-toggle svg {
+  transform: rotate(180deg);
+}
+
+.side-collapsed .side .lbl,
+.side-collapsed .side-count,
+.side-collapsed .side-foot span {
+  display: none;
+}
+
+.side-collapsed .side-nav a,
+.side-collapsed .side-nav button {
+  justify-content: center;
+  padding: 0;
+  position: relative;
+}
+
+.side-collapsed .side-nav em {
+  position: absolute;
+  top: 3px;
+  right: 6px;
+  min-width: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0 4px;
+  font-size: 10px;
+}
+
+.side-collapsed .side-label {
+  height: 1px;
+  margin: 12px 10px;
+  overflow: hidden;
+  font-size: 0;
+  background: var(--line);
+}
+
+.side-collapsed .side-foot {
+  justify-content: center;
 }
 
 .top {
@@ -1504,6 +1578,10 @@ a.tile:hover {
   grid-template-columns: minmax(280px, 2fr) 160px 120px minmax(160px, 1.5fr) 110px;
 }
 
+.lt-uploads .lt-row {
+  grid-template-columns: minmax(280px, 2.2fr) 150px 130px 110px 110px;
+}
+
 .lt-disposal .lt-row {
   grid-template-columns: minmax(280px, 2.2fr) 170px 170px 140px 110px;
   cursor: default;
@@ -2910,8 +2988,41 @@ a.tile:hover {
 }
 
 @media (max-width: 1000px) {
-  .app {
+  .app,
+  .app.side-collapsed {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .side-toggle {
+    display: none;
+  }
+
+  .side-collapsed .side .lbl,
+  .side-collapsed .side-count,
+  .side-collapsed .side-foot span {
+    display: revert;
+  }
+
+  .side-collapsed .side-nav a,
+  .side-collapsed .side-nav button {
+    justify-content: flex-start;
+    padding: 0 10px;
+  }
+
+  .side-collapsed .side-nav em {
+    position: static;
+    min-width: 20px;
+    height: 20px;
+    margin-left: auto;
+    padding: 0 6px;
+    font-size: 11.5px;
+  }
+
+  .side-collapsed .side-label {
+    height: auto;
+    margin: 20px 10px 6px;
+    font-size: 12px;
+    background: none;
   }
 
   .top-menu {
