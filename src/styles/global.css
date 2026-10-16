@@ -1,0 +1,412 @@
+/* ==========================================================================
+   ZB Vault — design tokens & base styles
+   ========================================================================== */
+
+:root {
+  /* Brand */
+  --green-950: #03190b;
+  --green-900: #063a17;
+  --green-800: #075021;
+  --green-700: #08772a;
+  --green-600: #0a8f31;
+  --lime-500: #84c11f;
+  --lime-400: #a2d544;
+  --lime-100: #eef7dc;
+  --mint-50: #f2f8f4;
+
+  /* Neutrals */
+  --ink-900: #111613;
+  --ink-800: #2a302c;
+  --ink-700: #3d4440;
+  --ink-600: #555d58;
+  --ink-500: #6c746f;
+  --ink-400: #8f9792;
+  --ink-300: #b9c0bc;
+  --ink-200: #d7dcd9;
+  --line: #e6e9e7;
+  --line-strong: #d5dad7;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --soft: #f5f6f5;
+
+  /* Status cells (bold, full-colour like a work board) */
+  --st-approved: #22a85a;
+  --st-review: #f5a623;
+  --st-indexed: #4c8ef7;
+  --st-stuck: #e04f5f;
+  --st-archived: #a3aba6;
+
+  /* Soft section tints */
+  --tint-green: #e7f5ec;
+  --tint-blue: #e8f0fe;
+  --tint-amber: #fff2dd;
+  --tint-violet: #f1eafd;
+  --tint-pink: #fdecef;
+
+  /* Legacy chip tones used in small UI */
+  --amber: #b86e00;
+  --amber-bg: #fff3d9;
+  --blue: #2457b8;
+  --blue-bg: #e8effd;
+  --violet: #6a47cc;
+  --violet-bg: #efe9ff;
+  --red: #c0392b;
+  --red-bg: #fdecea;
+
+  --shadow-sm: 0 1px 2px rgba(17, 22, 19, 0.06);
+  --shadow: 0 2px 6px rgba(17, 22, 19, 0.05), 0 12px 32px -12px rgba(17, 22, 19, 0.16);
+  --shadow-lg: 0 4px 10px rgba(17, 22, 19, 0.05), 0 30px 60px -24px rgba(17, 22, 19, 0.28);
+
+  --font-display: "Poppins", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-hand: "Caveat", "Segoe Script", cursive;
+  --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --container: 1240px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink-900);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+input {
+  font: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+img,
+svg {
+  display: block;
+}
+
+::selection {
+  background: rgba(132, 193, 31, 0.35);
+}
+
+:focus-visible {
+  outline: 2px solid var(--green-600);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.muted {
+  color: var(--ink-500);
+}
+
+/* --------------------------------------------------------------------------
+   Brand lockup
+   -------------------------------------------------------------------------- */
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--line-strong);
+}
+
+.brand-light .brand-divider {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.brand-text strong {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--ink-900);
+}
+
+.brand-text small {
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-500);
+}
+
+.brand-light .brand-text strong {
+  color: #fff;
+}
+
+.brand-light .brand-text small {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 50px;
+  padding: 0 26px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.btn svg {
+  transition: transform 0.2s var(--ease);
+}
+
+.btn:hover svg.arrow {
+  transform: translateX(3px);
+}
+
+.btn-sm {
+  height: 42px;
+  padding: 0 18px;
+  font-size: 15px;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-primary {
+  color: #fff;
+  background: var(--green-700);
+}
+
+.btn-primary:hover {
+  background: var(--green-800);
+}
+
+.btn-ghost {
+  color: var(--ink-900);
+  background: #fff;
+  border: 1px solid var(--line-strong);
+}
+
+.btn-ghost:hover {
+  border-color: var(--ink-400);
+}
+
+.btn-outline {
+  color: var(--green-700);
+  background: #fff;
+  border: 1px solid var(--green-700);
+}
+
+.btn-outline:hover {
+  background: var(--mint-50);
+}
+
+/* --------------------------------------------------------------------------
+   Small shared pieces
+   -------------------------------------------------------------------------- */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.chip::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.chip-green {
+  color: var(--green-700);
+  background: #e5f4e8;
+}
+
+.chip-amber {
+  color: var(--amber);
+  background: var(--amber-bg);
+}
+
+.chip-red {
+  color: var(--red);
+  background: var(--red-bg);
+}
+
+.lime-text {
+  color: var(--lime-400);
+}
+
+/* Avatar circle with initials */
+.avatar {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--av, var(--green-700));
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* File-type tile with a folded corner */
+.file-ico {
+  position: relative;
+  flex: none;
+  width: 28px;
+  height: 34px;
+  display: grid;
+  place-items: end center;
+  padding-bottom: 5px;
+  border-radius: 5px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--ico, #d6453a);
+  clip-path: polygon(0 0, 68% 0, 100% 26%, 100% 100%, 0 100%);
+}
+
+.file-ico::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 32%;
+  height: 26%;
+  background: rgba(255, 255, 255, 0.4);
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+
+.file-pdf {
+  --ico: #d6453a;
+}
+
+.file-docx {
+  --ico: #2b62c9;
+}
+
+.file-xlsx {
+  --ico: #1b8a4a;
+}
+
+.file-zip {
+  --ico: #c68a12;
+}
+
+.w60 { width: 60%; }
+.w70 { width: 70%; }
+.w80 { width: 80%; }
+.w90 { width: 90%; }
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .container {
+    padding: 0 18px;
+  }
+}
